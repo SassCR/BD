@@ -1,0 +1,87 @@
+-- CRIANDO TABELAS
+CREATE TABLE clientes( 
+ id_cliente SERIAL PRIMARY KEY,
+ nome VARCHAR(100),
+ cidade VARCHAR(100),
+ estado VARCHAR(50),
+ idade INT,
+ renda NUMERIC(10,2)
+);
+
+
+-- INSERINDO COISAS NAS TABELAS
+INSERT INTO clientes(nome, cidade, estado, idade, renda) VALUES
+('Fernando de noronha', 'campo pequeno', 'MS', 21, 500),
+('Bolsonaro preso', 'Los Santos', 'MS', 22, 202),
+('Lula preso', 'Algum lugar', 'MS', 24, 201),
+('Cleber machado', 'Ubatuba', 'MS', 27, 3500),
+('Thanos silva', 'Sertão', 'MS', 30, 5000),
+('Toninho starco', 'Aquidauana', 'MS', 56, 34000);
+
+
+-- PESQUISANDO NA TABELA
+SELECT * FROM clientes
+
+-- PESQUISANDO PESSOAS COM IDADE MAIOR QUE 25
+SELECT * FROM Clientes
+WHERE idade > 25
+
+-- PESQUISANDO PESSOAS COM IDADE DIFERENTE DE 21
+SELECT * FROM Clientes
+WHERE idade <> 21
+
+-- PESQUISANDO PESSOAS QUE MORAM EM AQUIDAUANA
+SELECT * FROM Clientes
+WHERE cidade = 'Aquidauana'
+
+-- INSERINDO MAIS PESSOAS A TABELA
+INSERT INTO clientes(nome, cidade, estado, idade, renda) VALUES
+('Peter Paker', 'Aquidauana', 'MS', 22, 2800),
+('Diana Princesa', 'Aquidauana', 'MS', 28, 12000),
+('Barry Alen', 'Aquidauana', 'MS', 26, 6200);
+
+
+-- AQUI ESTOU PESQUISANDO PESSOAS COM A IDADE ENTRE 20 A 30 ANOS, TEM ESSAS DUAS MANEIRAS DE PESQUISAR.
+ELECT * FROM clientes 
+WHERE idade BETWEEN 20 and 30;
+
+-- SEGUNDA FORMA
+SELECT * FROM clientes 
+WHERE idade >= 20 and idade <= 30;
+
+-- TEM DESSA MANEIRA PARA ACHAR PESSOAS QUE FORAM CRIADAS DEPOIS
+SELECT * FROM clientes 
+WHERE idade NOT BETWEEN 20 AND 30
+
+-- SEGUNDA MANEIRA
+SELECT * FROM clientes
+WHERE idade < 20 or idade > 30
+
+-- AGORA ESTOU PESQUISANDO OS CLIENTES PELOS ESTADOS
+SELECT * FROM clientes
+WHERE estado IN ('MS', 'SP')
+
+-- AGORA ESTOU PESQUISANDO TODOS OS CLIENTES QUE SÃO DE QUALQUER ESTADO MENOS DE SP
+SELECT * FROM clientes 
+WHERE estado NOT IN ('SP')
+
+-- like -> buscar algo que começa ou termina com um caracter
+
+SELECT * FROM clientes 
+WHERE nome LIKE 'T%'
+
+-- TERMINA
+SELECT * FROM clientes 
+WHERE nome LIKE '%a'
+
+--AGORA CAÇANDO OS DOIS QUE COMEÇA E TERMINA
+SELECT * FROM clientes 
+WHERE nome LIKE 'T%' AND nome LIKE '%o'
+
+--Segunda maneira
+SELECT * FROM clientes 
+WHERE nome ILIKE 'T%k'
+
+--Agora pelo começo do nome
+SELECT * FROM clientes 
+WHERE nome LIKE 'Ton%'
