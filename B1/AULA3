@@ -1,0 +1,166 @@
+CREATE TABLE cursos (
+id SERIAL PRIMARY KEY,
+nome VARCHAR(50) NOT NULL,
+carga_horaria INTEGER
+)
+
+CREATE TABLE alunos (
+id SERIAL PRIMARY KEY,
+nome VARCHAR(100) NOT NULL,
+idade INTEGER,
+curso_id INTEGER REFERENCES cursos(id),
+telefone VARCHAR(20),
+salario NUMERIC(10,2) -- Para demonstrar SUM e AVG
+)
+
+CREATE TABLE funcionarios (
+id SERIAL PRIMARY KEY,
+nome VARCHAR(100) NOT NULL,
+departamento VARCHAR(50),
+salario NUMERIC(10,2)
+)
+
+CREATE TABLE professores (
+id SERIAL PRIMARY KEY,
+nome VARCHAR(100) NOT NULL,
+disciplina VARCHAR(50)
+)
+
+INSERT INTO cursos (nome, carga_horaria) VALUES
+('matematica', 340);
+('Informática', 400),
+('Engenharia', 500),
+('Matemática', 350),
+('Física', 420),
+('Administração', 380),
+('Design', 300);
+
+INSERT INTO alunos (nome, idade, curso_id, telefone, salario) VALUES
+('Ana Silva', 22, 1, '(11) 99999-1111', 2500.00),
+('Bruno Santos', 19, 1, NULL, 1800.00),
+('Carla Oliveira', 25, 2, '(11) 99999-2222', 3200.00),
+('Diego Costa', 20, 2, NULL, 1900.00),
+('Elena Ferreira', 23, 1, '(11) 99999-3333', 2700.00),
+('Fábio Lima', 21, 3, '(11) 99999-4444', 2100.00),
+('Gabriela Rocha', 24, 4, NULL, 2800.00),
+('Henrique Alves', 18, 5, '(11) 99999-5555', 1600.00),
+('Isabela Nunes', 22, 5, '(11) 99999-6666', 2200.00),
+('João Pedro', 20, 1, NULL, 1700.00),
+('Karina Mendes', 26, 2, '(11) 99999-7777', 3400.00),
+('Leonardo Dias', 19, 3, '(11) 99999-8888', 2000.00),
+('Mariana Castro', 23, 6, NULL, 2400.00),
+('Nicolas Andrade', 21, 4, '(11) 99999-9999', 2600.00),
+('Olivia Freitas', 24, 6, '(11) 99999-0000', 2300.00);
+
+INSERT INTO funcionarios (nome, departamento, salario) VALUES
+('Carlos Souza', 'TI', 4500.00),
+('Mariana Lima', 'RH', 3800.00),
+('Rafael Oliveira', 'TI', 5200.00),
+('Juliana Costa', 'Financeiro', 4800.00),
+('André Santos', 'TI', 4000.00),
+('Patrícia Silva', 'RH', 3500.00),
+('Gustavo Pereira', 'Marketing', 4200.00),
+('Fernanda Alves', 'Financeiro', 5000.00);
+
+INSERT INTO professores (nome, disciplina) VALUES
+('Ana Silva', 'Banco de Dados'), -- Nome em comum com alunos
+('Roberto Lima', 'Estrutura de Dados'),
+('Carla Oliveira', 'Programação'), -- Nome em comum com alunos
+('Paulo Mendes', 'Matemática'),
+('Mariana Castro', 'Física'); -- Nome em comum com alunos
+
+SELECT * FROM alunos ORDER BY id  -- Para forma ascrente e para descrescente é só coloca DESC
+
+SELECT * FROM alunos
+SELECT * FROM cursos
+SELECT * FROM funcionarios
+SELECT * FROM professores
+
+--OPERADORES
+--AND
+SELECT * FROM alunos
+WHERE idade >= 18 AND curso_id = 1 -- Eu busquei todos os alunos que tem 18 ou mais e cursa informatica
+
+--OR
+SELECT * FROM alunos
+WHERE curso_id = 1 OR curso_id = 2
+
+--NOT
+SELECT * FROM alunos
+WHERE NOT curso_id = 1 
+
+--IS NULL
+SELECT * FROM alunos WHERE telefone IS NULL --Aqui estou buscando todos os alunos que não tem telefone
+
+--IS NOT NULL
+SELECT * FROM alunos WHERE telefone IS NOT NULL --Aqui estou buscando todos os alunos que tem telefone
+
+--INNER JOIN apenas alunos com curso correspondente
+SELECT alunos.nome AS alu, cursos.nome AS cur
+FROM alunos
+INNER JOIN cursos ON alunos.curso_id = cursos.id
+ORDER BY alu --aqui é o apelido que dei
+
+--INNER JOIN SEM O AS /APELIDO dessa maneira ele puxa dois nome porém um de curso e outro de alunos
+SELECT alunos.nome, cursos.nome
+FROM alunos
+INNER JOIN cursos ON alunos.curso_id = cursos.id
+
+--LEFT JOIN todos os alunos, mesmo sem curso correspondente 
+SELECT alunos.nome AS alunos, cursos.nome AS curso
+FROM alunos
+LEFT JOIN cursos ON alunos.curso_id = cursos.id
+ORDER BY alunos
+
+--RIGHT JOIN todos os cursos, mesmo sem alunos matriculados
+SELECT alunos.nome AS aluno, cursos.nome AS curso
+FROM alunos
+RIGHT JOIN cursos ON alunos.curso_id = cursos.id
+ORDER BY alunos
+
+--FULL JOIN todas as combinações com correspodencia
+SELECT alunos.nome AS aluno, cursos.nome AS curso
+FROM alunos
+FULL JOIN cursos ON alunos.curso_id = cursos.id
+ORDER BY alunos, cursos
+
+--CROSS JOIN todas as combinações possiveis
+SELECT alunos.nome AS aluno, cursos.nome AS curso
+FROM alunos
+CROSS JOIN cursos 
+ORDER BY alunos, cursos
+LIMIT 20 --Limita o resultado para não gerar muitos resultados
+
+--COUNT exibi um total
+SELECT COUNT (*) AS total_alunos FROM alunos
+
+SELECT
+	curso_id,
+	COUNT (*) AS quantidade,
+	SUM(salario) AS total_salario,
+	AVG(salario) AS media_salarial
+FROM alunos
+GROUP BY curso_id
+ORDER BY curso_id
+
+--UNION  nomes que aparecem em alunos ou professores sem duplicar
+SELECT nome FROM alunos
+UNION 
+SELECT nome FROM professores
+
+--UNION ALL mostra dados duplicados
+
+SELECT nome FROM alunos
+UNION ALL
+SELECT nome FROM professores
+
+--INTERSECT nomes que aparecem em alunos e professores
+SELECT nome FROM alunos
+INTERSECT
+SELECT nome FROM professores
+
+--EXCEPT
+SELECT nome FROM alunos
+EXCEPT
+SELECT nome FROM professores
+
