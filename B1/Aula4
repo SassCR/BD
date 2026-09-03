@@ -1,0 +1,150 @@
+Atividade
+CREATE TABLE cursos (
+id SERIAL PRIMARY KEY,
+nome VARCHAR(50) NOT NULL,
+carga_horaria INTEGER
+);
+
+CREATE TABLE alunos (
+id SERIAL PRIMARY KEY,
+nome VARCHAR(100) NOT NULL,
+idade INTEGER,
+curso_id INTEGER REFERENCES cursos(id),
+telefone VARCHAR(20),
+salario NUMERIC(10,2) -- Para demonstrar SUM e AVG
+);
+
+CREATE TABLE funcionarios (
+id SERIAL PRIMARY KEY,
+nome VARCHAR(100) NOT NULL,
+departamento VARCHAR(50),
+salario NUMERIC(10,2)
+);
+
+CREATE TABLE professores (
+id SERIAL PRIMARY KEY,
+nome VARCHAR(100) NOT NULL,
+disciplina VARCHAR(50)
+);
+
+INSERT INTO cursos (nome, carga_horaria) VALUES
+('Informática', 400),
+('Engenharia', 500),
+('Matemática', 350),
+('Inglês', 342),
+('Culinaria', 666),
+('Física', 420),
+('Administração', 380),
+('Design', 300);
+
+INSERT INTO alunos (nome, idade, curso_id, telefone, salario) VALUES
+('Ana Silva', 22, 1, '(11) 99999-1111', 2500.00),
+('Bruno Santos', 19, 1, NULL, 1800.00),
+('Carla Oliveira', 25, 2, '(11) 99999-2222', 3200.00),
+('Diego Costa', 20, 2, NULL, 1900.00),
+('Elena Ferreira', 23, 1, '(11) 99999-3333', 2700.00),
+('Fábio Lima', 21, 3, '(11) 99999-4444', 2100.00),
+('Gabriela Rocha', 24, 4, NULL, 2800.00),
+('Henrique Alves', 18, 5, '(11) 99999-5555', 1600.00),
+('Isabela Nunes', 22, 5, '(11) 99999-6666', 2200.00),
+('João Pedro', 20, 1, NULL, 1700.00),
+('Karina Mendes', 26, 2, '(11) 99999-7777', 3400.00),
+('Leonardo Dias', 19, 3, '(11) 99999-8888', 2000.00),
+('Mariana Castro', 23, 6, NULL, 2400.00),
+('Nicolas Andrade', 21, 4, '(11) 99999-9999', 2600.00),
+('Olivia Freitas', 24, 6, '(11) 99999-0000', 2300.00);
+
+INSERT INTO funcionarios (nome, departamento, salario) VALUES
+('Carlos Souza', 'TI', 4500.00),
+('Mariana Lima', 'RH', 3800.00),
+('Rafael Oliveira', 'TI', 5200.00),
+('Juliana Costa', 'Financeiro', 4800.00),
+('André Santos', 'TI', 4000.00),
+('Patrícia Silva', 'RH', 3500.00),
+('Gustavo Pereira', 'Marketing', 4200.00),
+('Fernanda Alves', 'Financeiro', 5000.00);
+
+INSERT INTO professores (nome, disciplina) VALUES
+('Ana Silva', 'Banco de Dados'), -- Nome em comum com alunos
+('Roberto Lima', 'Estrutura de Dados'),
+('Carla Oliveira', 'Programação'), -- Nome em comum com alunos
+('Paulo Mendes', 'Matemática'),
+('Mariana Castro', 'Física'); 
+
+SELECT * From alunos
+SELECT * From cursos
+SELECT * From professores
+SELECT * From funcionarios
+
+--1 Busque todos os alunos que não tem telefone;
+SELECT * From alunos 
+WHERE  telefone IS NULL
+
+--2. Busque todos os alunos que tem telefone;
+SELECT * From alunos 
+WHERE  telefone IS NOT NULL
+
+--3. Busque alunos que tenham mais de 21 anos e que o salário seja mais de 2500.
+SELECT * FROM alunos
+WHERE salario > 2500 AND idade >= 21
+
+--4. Busque os funcionários de TI e mostre o salário e nome;
+SELECT nome, departamento, salario FROM funcionarios
+WHERE departamento = 'TI'
+
+--5. Busque professores que dão aula na disciplina de estrutura de dados ou programação.
+SELECT nome AS Prof, disciplina FROM professores
+WHERE disciplina = 'Estrutu1ra de dados' OR disciplina = 'Programação'
+
+--6. Busque os cursos com carga horária maior que 400;
+SELECT
+c.nome AS curso,
+c.carga_horaria
+FROM alunos a
+INNER JOIN cursos c ON a.curso_id = c.id
+WHERE c.carga_horaria > 400
+
+--7. Liste todos os alunos com o nome do curso que estão fazendo.
+SELECT alunos.nome AS aluno, cursos.nome AS curso
+FROM alunos
+INNER JOIN cursos ON alunos.curso_id = cursos.id
+ORDER BY aluno;
+
+--8. Mostre todos os cursos com a quantidade de alunos matriculados (incluindo cursos vazios).
+SELECT
+c.nome AS curso,
+COUNT(a.id) AS quantidade_alunos
+FROM cursos c
+LEFT JOIN alunos a ON c.id = a.curso_id
+GROUP BY c.nome
+
+--9. Liste os alunos que estão matriculados em cursos com carga horária acima de 350 horas.
+SELECT
+a.nome AS Alunos,
+c.nome AS curso,
+c.carga_horaria
+FROM alunos a
+INNER JOIN cursos c ON a.curso_id = c.id
+WHERE c.carga_horaria > 350
+
+--10.Mostre os alunos com seus cursos, mas apenas dos cursos de Informática e Engenharia.
+SELECT a.nome AS Alunos, c.nome AS curso FROM alunos a
+INNER JOIN cursos c ON a.curso_id = c.id
+WHERE c.nome = 'Informática' AND c.nome = 'Engenharia'
+
+
+
+--11. Conte quantos alunos tem em cada curso.
+--12.Calcule a idade média dos alunos por curso.
+--13.Mostre o salário total e a média salarial dos alunos agrupados por curso.
+--14.Conte quantos funcionários tem em cada departamento.
+--15.Quais cursos têm mais de 2 alunos matriculados?
+--16.Mostre os departamentos com salário médio acima de 4000.
+--17.Encontre alunos que têm telefone E estão no curso de Informática.
+--18.Mostre alunos do curso de Matemática OU Física.
+--19.Liste alunos que NÃO estão no curso de Administração.
+--20.Mostre todos os nomes que aparecem em alunos OU professores (sem duplicados).
+--21.Quais nomes aparecem tanto em alunos quanto em professores?
+--22.Quais nomes estão em alunos mas NÃO em professores?
+
+
