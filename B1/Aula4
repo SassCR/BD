@@ -1,4 +1,4 @@
-Atividade
+--Atividade
 CREATE TABLE cursos (
 id SERIAL PRIMARY KEY,
 nome VARCHAR(50) NOT NULL,
@@ -94,15 +94,11 @@ WHERE departamento = 'TI'
 
 --5. Busque professores que dão aula na disciplina de estrutura de dados ou programação.
 SELECT nome AS Prof, disciplina FROM professores
-WHERE disciplina = 'Estrutu1ra de dados' OR disciplina = 'Programação'
+WHERE disciplina = 'Estrutura de Dados' OR disciplina = 'Programação'
 
 --6. Busque os cursos com carga horária maior que 400;
-SELECT
-c.nome AS curso,
-c.carga_horaria
-FROM alunos a
-INNER JOIN cursos c ON a.curso_id = c.id
-WHERE c.carga_horaria > 400
+SELECT * FROM cursos
+WHERE carga_horaria > 400
 
 --7. Liste todos os alunos com o nome do curso que estão fazendo.
 SELECT alunos.nome AS aluno, cursos.nome AS curso
@@ -128,23 +124,89 @@ INNER JOIN cursos c ON a.curso_id = c.id
 WHERE c.carga_horaria > 350
 
 --10.Mostre os alunos com seus cursos, mas apenas dos cursos de Informática e Engenharia.
-SELECT a.nome AS Alunos, c.nome AS curso FROM alunos a
+SELECT a.nome AS alunos, c.nome AS curso FROM alunos a
 INNER JOIN cursos c ON a.curso_id = c.id
-WHERE c.nome = 'Informática' AND c.nome = 'Engenharia'
-
-
+WHERE c.nome = 'Informática' OR c.nome = 'Engenharia'
 
 --11. Conte quantos alunos tem em cada curso.
+SELECT
+c.nome AS curso,
+COUNT(a.id) AS quantidade_alunos
+FROM cursos c
+INNER JOIN alunos a ON c.id = a.curso_id
+GROUP BY c.nome
+
 --12.Calcule a idade média dos alunos por curso.
+SELECT
+c.nome AS curso,
+AVG(a.idade) AS Idade_media
+FROM cursos c
+INNER JOIN alunos a ON c.id = a.curso_id
+GROUP BY c.nome
+
 --13.Mostre o salário total e a média salarial dos alunos agrupados por curso.
+SELECT
+c.nome AS curso,
+AVG(a.salario) AS salario_medio,
+SUM(a.salario) AS salario_total
+FROM cursos c
+INNER JOIN alunos a ON c.id = a.curso_id
+GROUP BY c.nome
+
 --14.Conte quantos funcionários tem em cada departamento.
+SELECT departamento,
+COUNT(*) AS quantidade_funcionarios
+FROM funcionarios 
+GROUP BY departamento
+ORDER BY departamento
+
 --15.Quais cursos têm mais de 2 alunos matriculados?
+SELECT cursos.nome AS curso, COUNT(alunos.id) AS quantidade
+FROM cursos
+LEFT JOIN alunos ON cursos.id = alunos.curso_id
+GROUP BY cursos.nome
+HAVING COUNT(alunos.id) > 2
+
 --16.Mostre os departamentos com salário médio acima de 4000.
+SELECT
+departamento,
+COUNT(*) AS quantidade,
+SUM(salario) AS total_salarios,
+ROUND(AVG(salario), 2) AS media_salarial
+FROM funcionarios
+WHERE salario > 4000
+GROUP BY departamento
+ORDER BY departamento;
+
 --17.Encontre alunos que têm telefone E estão no curso de Informática.
+SELECT a.nome AS Alunos, c.nome AS curso, a.telefone From alunos a
+INNER JOIN cursos c ON a.curso_id = c.id
+WHERE  telefone IS NOT NULL AND c.nome = 'Informática'
+
+
+
 --18.Mostre alunos do curso de Matemática OU Física.
+SELECT a.nome AS Alunos, c.nome AS curso FROM alunos a
+INNER JOIN cursos c ON a.curso_id = c.id
+WHERE c.nome = 'Física' OR c.nome = 'Matemática'
+
 --19.Liste alunos que NÃO estão no curso de Administração.
+SELECT a.nome AS Alunos, c.nome AS curso FROM alunos a
+INNER JOIN cursos c ON a.curso_id = c.id
+WHERE NOT c.nome = 'Administração'
+
 --20.Mostre todos os nomes que aparecem em alunos OU professores (sem duplicados).
+SELECT nome FROM alunos
+UNION
+SELECT nome FROM professores
+ORDER BY nome;
+
 --21.Quais nomes aparecem tanto em alunos quanto em professores?
---22.Quais nomes estão em alunos mas NÃO em professores?
+SELECT nome FROM alunos
+INTERSECT
+SELECT nome FROM professores
 
-
+--22.Quais nomes estão em alunos mas NÃO em professores?SELECT nome FROM alunos
+SELECT nome FROM alunos
+EXCEPT
+SELECT nome FROM professores
