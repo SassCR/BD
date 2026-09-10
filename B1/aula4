@@ -210,3 +210,9 @@ SELECT nome FROM professores
 SELECT nome FROM alunos
 EXCEPT
 SELECT nome FROM professores
+
+
+sqlSELECT alunos.nome AS nome_aluno, cursos.nome AS nome_curso
+FROM alunos
+INNER JOIN matriculas ON alunos.id = matriculas.id_aluno
+INNER JOIN cursos ON matriculas.id_curso = cursos
