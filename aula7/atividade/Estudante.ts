@@ -6,9 +6,11 @@ export class Estudante extends Pessoa {
         super(nome, cpf, idade, email, telefone);
         this.RA = RA
     }
-    consultarLivro() {
-        const disponivel = "Livro disponível na biblioteca do campus";
-        const indisponivel = "Livro indisponível na biblioteca do campus"; 
-        if(Math.random())
+    consultarLivro(nomeLivro: string): string {
+        const disponivel = `O livro "${nomeLivro}" está disponível na biblioteca do campus`;
+        const indisponivel = `O livro "${nomeLivro}" está indisponível na biblioteca do campus`;
+        const frases = [disponivel, indisponivel];
+        const indiceAleatorio = Math.floor(Math.random() * frases.length);
+        return frases[indiceAleatorio];
     }
 }

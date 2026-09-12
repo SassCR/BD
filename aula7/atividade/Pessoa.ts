@@ -13,11 +13,11 @@ export class Pessoa {
         this.telefone = telefone;
     }
     saudacao() {
-        console.log(`Olá meu nome é ${this.nome} e tenho ${this.idade}.`);
+        console.log(`Olá meu nome é ${this.nome} e tenho ${this.idade} anos.`);
     }
 
     informacao() {
-        console.log(`Caso deseje entra em contato esse é meu ${this.telefone} e esse o meu${this.email}.`);
+        console.log(`Caso deseje entra em contato o meu telefone é: ${this.telefone} e esse o meu email:${this.email}.`);
 
     }
 
