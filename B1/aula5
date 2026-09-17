@@ -1,0 +1,45 @@
+
+CREATE TABLE alunos (
+id SERIAL PRIMARY KEY,
+nome VARCHAR(100),
+cpf CHAR(11) UNIQUE,
+cidade VARCHAR(50),
+curso VARCHAR(50)
+);
+INSERT INTO alunos (nome, cpf, cidade, curso)
+SELECT
+'Aluno ' || gs,
+LPAD((10000000000 + gs)::TEXT, 11, '0'),
+(ARRAY['Dourados', 'Campo Grande', 'Três Lagoas', 'Ponta Porã', 'Corumbá'])
+[1 + (gs % 5)],
+(ARRAY['Informática', 'Agropecuária', 'Edificações', 'Administração'])
+[1 + (gs % 4)]
+FROM generate_series(1, 1000000) AS gs;
+
+--Countar tudo da tabela alunos	
+SELECT COUNT(*) FROM alunos
+
+--Buscar somente 10 alunos
+SELECT * FROM alunos LIMIT 10;
+--Buscar os 10 ultimos
+SELECT * FROM alunos ORDER BY id DESC LIMIT 10;
+
+--Buscando o aluno 500 mil
+SELECT * FROM alunos WHERE nome = 'Aluno 500000'-- 134 MSEC deu 77MSEC com INDEX
+
+--Buscando aluno da cidade especifica
+SELECT * FROM alunos WHERE cidade = 'Dourados';-- 310 MSEC deu 201MSEC com INDEX
+
+--Buscando aluno por CPF especifico
+SELECT * FROM alunos WHERE cpf = '11111111111'-- 95 MSEC 
+
+--Buscando alunos com um intervelo entre os ids
+SELECT * FROM alunos WHERE id BETWEEN 100000 AND 500000; -- 394 MSEC 
+
+--Buscando aluno por nome especifico, a % diz que não importa o que tem a seguir
+SELECT * FROM alunos WHERE nome LIKE 'Aluno 999%'-- 194 MSEC
+
+--Criando um index aqui eu criei um index para os campos nome, cidade e curso.
+CREATE INDEX idx_alunos_nome ON alunos (nome);
+CREATE INDEX idx_aluno_cidade ON alunos (cidade);
+CREATE INDEX idx_alunos_curso ON alunos (curso);
