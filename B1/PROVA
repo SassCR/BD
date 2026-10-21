@@ -1,0 +1,20 @@
+CREATE TABLE clientes(
+id_clientes INT PRIMARY KEY,
+nome VARCHAR(10) NOT NULL,
+cpf VARCHAR(14),
+cidade VARCHAR(200) NOT NULL,
+CONSTRAINT clientes_pkey PRIMARY KEY (id_clientes)
+)
+CREATE TABLE veiculos(
+id_veiculos INT PRIMARY KEY,
+modelo VARCHAR(50),
+placa VARCHAR(10),
+CONSTRAINT veiculos_pkey PRIMARY KEY (id_veiculos)
+)
+CREATE TABLE locacoes(
+id_disponibilidade INT PRIMARY KEY,
+CONSTRAINT fk_clintes_locacoes_clientes
+	FOREIGN KEY (id_clientes) REFERENCES clientes (id_clientes),
+CONSTRAINT fk_veiculos_locacoes_veiculos
+	FOREIGN KEY (id_veiculos) REFERENCES veiculos (id_veiculos)
+)
